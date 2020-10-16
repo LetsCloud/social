@@ -15,57 +15,44 @@ import org.dominokit.domino.ui.icons.Icons;
 /**
  * Copyright (C) 2018 - 2019 Frank Hossfeld <frank.hossfeld@googlemail.com>
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
-public class LoginComponent extends AbstractComponent<ILoginComponent.Controller, HTMLElement> implements ILoginComponent {
-  private TextBox userId;
+public class LoginComponent extends AbstractComponent<ILoginComponent.Controller, HTMLElement>
+		implements ILoginComponent {
+	private TextBox userId;
 
-  private TextBox password;
+	private TextBox password;
 
-  private FieldsGrouping fieldsGrouping;
+	private FieldsGrouping fieldsGrouping;
 
-  public LoginComponent() {
-    super();
-  }
+	public LoginComponent() {
+		super();
+	}
 
-  @Override
-  public void render() {
-    fieldsGrouping = FieldsGrouping.create();
-    this.userId = TextBox.create("User ID")
-                                 .groupBy(fieldsGrouping)
-                                 .addLeftAddOn(Icons.ALL.label());
-    this.password = TextBox.create("Password")
-                                 .groupBy(fieldsGrouping)
-                                 .addLeftAddOn(Icons.ALL.location_on());
-    initElement(Card.create("Login Parameter")
-                            .appendChild(Row.create()
-                                            .addColumn(Column.span12()
-                                                             .appendChild(this.userId)))
-                            .appendChild(Row.create()
-                                            .addColumn(Column.span12()
-                                                             .appendChild(this.password)))
-                            .appendChild(Row.create()
-                                            .setGap("10px")
-                                            .addColumn(Column.span12()
-                                                             .appendChild(Button.createPrimary("Login")
-                                                                                .setSize(ButtonSize.LARGE)
-                                                                                .style()
-                                                                                .setMinWidth("120px")
-                                                                                .get()
-                                                                                .addClickListener(e -> getController().doLogin(this.userId.getValue(),
-                                                                                                                               this.password.getValue()))))
-                                            .style()
-                                            .setTextAlign("right"))
-                            .element());
-  }
+	@Override
+	public void render() {
+		fieldsGrouping = FieldsGrouping.create();
+		this.userId = TextBox.create("User ID").groupBy(fieldsGrouping).addLeftAddOn(Icons.ALL.label());
+		this.password = TextBox.create("Password").groupBy(fieldsGrouping).addLeftAddOn(Icons.ALL.location_on());
+		initElement(
+				Card.create("Login Parameter")
+						.appendChild(Row.create().addColumn(Column.span12().appendChild(this.userId)))
+						.appendChild(Row.create().addColumn(Column.span12().appendChild(this.password)))
+						.appendChild(Row.create().setGap("10px").addColumn(Column.span12()
+								.appendChild(Button.createPrimary("Login").setSize(ButtonSize.LARGE).style()
+										.setMinWidth("120px").get().addClickListener(e -> getController()
+												.doLogin(this.userId.getValue(), this.password.getValue()))))
+								.style().setTextAlign("right"))
+						.element());
+	}
 }
