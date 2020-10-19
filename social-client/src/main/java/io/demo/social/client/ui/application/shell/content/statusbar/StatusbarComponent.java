@@ -41,9 +41,20 @@ public class StatusbarComponent extends AbstractComponent<IStatusbarComponent.Co
 	@Override
 	public void render() {
 		messageInfo = Elements.div().element();
-		initElement(Row.create().style().setMargin("0px").add("demo-footer").get()
-				.addColumn(Style.of(Column.span6()).get().appendChild(Elements.h(4).textContent("Social application")))
-				.addColumn(Style.of(Column.span6()).setTextAlign("right").get().appendChild(this.messageInfo))
+		// @formatter:off
+		initElement(Row.create()
+				.style()
+					.setMargin("0px")
+					.add("demo-footer")
+					.get()
+				.addColumn(Style.of(Column.span6()).get()
+						.appendChild(Elements.h(4)
+						.textContent("Social application")))
+				.addColumn(Style.of(Column.span6())
+							.setTextAlign("right")
+							.get()
+						.appendChild(this.messageInfo))
 				.element());
+		// @formatter:on
 	}
 }

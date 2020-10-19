@@ -19,7 +19,8 @@
 		<nalu.version>2.0.1</nalu.version>
 		<guava.version>29.0-jre</guava.version>
 		<!-- DominoUI version -->
-		<domino.version>1.0-SNAPSHOT</domino.version>
+		<domino.version>1.0-rc.5-SNAPSHOT</domino.version>
+		<dominokit.version>1.0-SNAPSHOT</dominokit.version>
 		<!-- Public Spring Boot directory -->
 		<spring-boot.public.dir>${basedir}/../social-server/target/classes/public/</spring-boot.public.dir>
 		<spring-boot.webapp.dir>${basedir}/../social-server/target/social-server-1.0.0/WEB-INF/classes/public/</spring-boot.webapp.dir>
@@ -35,10 +36,21 @@
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
+
+			<dependency>
+				<groupId>org.dominokit.domino</groupId>
+				<artifactId>domino</artifactId>
+				<version>${domino.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
 	<dependencies>
+		<!-- ************* -->
+		<!-- social-shared -->
+		<!-- ************* -->
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>social-shared</artifactId>
@@ -50,7 +62,10 @@
 			<version>${project.version}</version>
 			<classifier>sources</classifier>
 		</dependency>
-		
+
+		<!-- *** -->
+		<!-- GWT -->
+		<!-- *** -->
 		<dependency>
 			<groupId>com.google.gwt</groupId>
 			<artifactId>gwt-user</artifactId>
@@ -59,7 +74,10 @@
 			<groupId>com.google.gwt</groupId>
 			<artifactId>gwt-dev</artifactId>
 		</dependency>
-		
+
+		<!-- ******* -->
+		<!-- NaluKit -->
+		<!-- ******* -->
 		<dependency>
 			<groupId>com.github.nalukit</groupId>
 			<artifactId>nalu</artifactId>
@@ -75,15 +93,19 @@
 			<artifactId>nalu-plugin-elemental2</artifactId>
 			<version>${nalu.version}</version>
 		</dependency>
+
+		<!-- ********* -->
+		<!-- DominoKit -->
+		<!-- ********* -->
 		<dependency>
 			<groupId>org.dominokit</groupId>
 			<artifactId>domino-ui</artifactId>
-			<version>${domino.version}</version>
+			<version>${dominokit.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.dominokit</groupId>
 			<artifactId>domino-ui</artifactId>
-			<version>${domino.version}</version>
+			<version>${dominokit.version}</version>
 			<classifier>sources</classifier>
 		</dependency>
 	</dependencies>
@@ -97,46 +119,95 @@
 					<artifactId>gwt-maven-plugin</artifactId>
 					<version>1.0.0</version>
 					<extensions>true</extensions>
+					<executions>
+						<execution>
+							<goals>
+								<goal>compile</goal>
+								<goal>test</goal>
+							</goals>
+						</execution>
+					</executions>
 					<configuration>
+						<skipModule>true</skipModule>
+						<failOnError>true</failOnError>
 						<sourceLevel>1.8</sourceLevel>
 						<failOnError>true</failOnError>
+						<compilerArgs>
+							<arg>-compileReport</arg>
+							<arg>-XcompilerMetrics</arg>
+						</compilerArgs>
 						<codeserverArgs>
 							<arg>-strict</arg>
 						</codeserverArgs>
 						<devmodeArgs>
 							<arg>-strict</arg>
 						</devmodeArgs>
+						<classpathScope>compile+runtime</classpathScope>
 					</configuration>
 				</plugin>
 			</plugins>
 		</pluginManagement>
-
-		<plugins>
-			<plugin>
-				<groupId>net.ltgt.gwt.maven</groupId>
-				<artifactId>gwt-maven-plugin</artifactId>
-				<configuration>
-					<moduleName>io.demo.social.social</moduleName>
-					<moduleShortName>social</moduleShortName>
-<!-- 					<launcherDir>${project.build.directory}/gwt/launcherDir</launcherDir> -->
-					<!-- Spring Boot as default: put the compile result under public directory -->
-					<classpathScope>compile+runtime</classpathScope>
-					<launcherDir>${spring-boot.webapp.dir}</launcherDir>
-					<warDir>${spring-boot.webapp.dir}</warDir>
-				</configuration>
-			</plugin>
-		</plugins>
 	</build>
 
-	<repositories>
-		<repository>
-			<id>sonatype-snapshots-repo</id>
-			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
-			<snapshots>
-				<enabled>true</enabled>
-				<updatePolicy>always</updatePolicy>
-				<checksumPolicy>fail</checksumPolicy>
-			</snapshots>
-		</repository>
-	</repositories>
+	<profiles>
+		<profile>
+			<id>env-prod</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>net.ltgt.gwt.maven</groupId>
+						<artifactId>gwt-maven-plugin</artifactId>
+						<configuration>
+							<moduleName>io.demo.social.SocialProd</moduleName>
+							<!-- Spring Boot as default: put the compile result under public directory -->
+							<launcherDir>${spring-boot.webapp.dir}</launcherDir>
+							<warDir>${spring-boot.webapp.dir}</warDir>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+		<profile>
+			<id>env-dev</id>
+			<activation>
+				<property>
+					<name>env</name>
+					<value>dev</value>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>net.ltgt.gwt.maven</groupId>
+						<artifactId>gwt-maven-plugin</artifactId>
+						<configuration>
+							<moduleName>io.demo.social.SocialDev</moduleName>
+							<!-- Spring Boot as default: put the compile result under public directory -->
+							<launcherDir>${spring-boot.webapp.dir}</launcherDir>
+							<warDir>${spring-boot.webapp.dir}</warDir>
+						</configuration>
+					</plugin>
+					<!-- ********************* -->
+					<!-- versions-maven-plugin -->
+					<!-- ********************* -->
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>versions-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<phase>compile</phase>
+								<goals>
+									<goal>display-property-updates</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>

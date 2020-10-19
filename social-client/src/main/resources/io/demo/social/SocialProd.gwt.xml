@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module rename-to="social">
+	<!-- Inherit the SocialBase modul. -->
+	<inherits name='io.demo.social.SocialBase' />
+
+	<!-- This will add language selecting based on language selected in browser -->
+	<set-configuration-property
+		name="locale.useragent" value="Y" />
+
+	<!-- You can also control search order for locale by setting -->
+	<set-configuration-property
+		name="locale.searchorder" value="queryparam,cookie,meta,useragent" />
+
+	<extend-property name="locale" values="hu_HU" />
+	<extend-property name="locale" values="en" />
+	<set-property name="locale" value="hu_HU" />
+	<set-property-fallback name="locale"
+		value="hu_HU" />
+</module>

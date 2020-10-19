@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module rename-to="social">
+	<!-- Inherit the SocialBase modul. -->
+	<inherits name='io.demo.social.SocialBase' />
+
+	<inherits name="com.google.gwt.logging.Logging" />
+	
+	<set-property name="gwt.logging.enabled" value="TRUE" />
+	<set-property name="gwt.logging.logLevel" value="ALL" />
+	<set-property name="gwt.logging.consoleHandler"
+		value="ENABLED" />
+
+	<set-property name="user.agent" value="safari" />
+</module>

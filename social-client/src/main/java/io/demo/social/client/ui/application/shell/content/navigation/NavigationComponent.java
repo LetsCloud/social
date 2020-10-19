@@ -24,15 +24,15 @@ import org.dominokit.domino.ui.tree.TreeItem;
  */
 public class NavigationComponent extends AbstractComponent<INavigationComponent.Controller, HTMLElement>
 		implements INavigationComponent {
-	private TreeItem Screen01Item;
+	private TreeItem<String> Screen01Item;
 
-	private TreeItem Screen02Item;
+	private TreeItem<String> Screen02Item;
 
-	private TreeItem Screen03Item;
+	private TreeItem<String> Screen03Item;
 
-	private TreeItem Screen04Item;
+	private TreeItem<String> Screen04Item;
 
-	private TreeItem Screen05Item;
+	private TreeItem<String> Screen05Item;
 
 	public NavigationComponent() {
 		super();
@@ -50,7 +50,7 @@ public class NavigationComponent extends AbstractComponent<INavigationComponent.
 				.addClickListener(e -> getController().doNavigateTo("screen04"));
 		this.Screen05Item = TreeItem.create("Screen05", Icons.ALL.list())
 				.addClickListener(e -> getController().doNavigateTo("screen05"));
-		Tree tree = Tree.create("Navigation");
+		Tree<String> tree = Tree.create("Navigation");
 		tree.appendChild(Screen01Item);
 		tree.appendChild(Screen02Item);
 		tree.appendChild(Screen03Item);
