@@ -14,9 +14,9 @@
 	<packaging>gwt-app</packaging>
 
 	<properties>
-		<!-- nalu version -->
 		<gwt.version>2.9.0</gwt.version>
-		<nalu.version>2.0.1</nalu.version>
+		<!-- nalu version -->
+		<nalu.version>2.1.0</nalu.version>
 		<guava.version>29.0-jre</guava.version>
 		<!-- DominoUI version -->
 		<domino.version>1.0-rc.5-SNAPSHOT</domino.version>
