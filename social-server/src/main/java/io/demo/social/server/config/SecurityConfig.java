@@ -1,5 +1,8 @@
 package io.demo.social.server.config;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,7 +30,10 @@ import io.demo.social.server.security.oauth2.OAuth2AuthenticationSuccessHandler;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true, jsr250Enabled = true, prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+	private static final Logger logger = LoggerFactory.getLogger(SecurityConfig.class);
 
+	private static final String OAUTH2LOGIN_BASEURI = "/oauth2/authorize";
+	
 	@Autowired
 	private CustomUserDetailsService customUserDetailsService;
 
@@ -58,7 +64,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	public HttpCookieOAuth2AuthorizationRequestRepository cookieAuthorizationRequestRepository() {
 		return new HttpCookieOAuth2AuthorizationRequestRepository();
 	}
-
+	
 	@Override
 	public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
 		authenticationManagerBuilder.userDetailsService(customUserDetailsService).passwordEncoder(passwordEncoder());
@@ -77,18 +83,46 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.cors().and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().csrf()
-				.disable().formLogin().disable().httpBasic().disable().exceptionHandling()
-				.authenticationEntryPoint(new RestAuthenticationEntryPoint()).and().authorizeRequests()
-				.antMatchers("/", "/error", "/favicon.ico", "/**/*.png", "/**/*.gif", "/**/*.svg", "/**/*.jpg",
-						"/**/*.html", "/**/*.css", "/**/*.js")
-				.permitAll().antMatchers("/auth/**", "/oauth2/**").permitAll().anyRequest().authenticated().and()
-				.oauth2Login().authorizationEndpoint().baseUri("/oauth2/authorize")
-				.authorizationRequestRepository(cookieAuthorizationRequestRepository()).and().redirectionEndpoint()
-				.baseUri("/oauth2/callback/*").and().userInfoEndpoint().userService(customOAuth2UserService).and()
-				.successHandler(oAuth2AuthenticationSuccessHandler).failureHandler(oAuth2AuthenticationFailureHandler);
+		// @formatter:off
+		http.cors()
+				.and()
+			.sessionManagement()
+				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+				.and()
+			.csrf()
+				.disable()
+			.formLogin()
+				.disable()
+			.httpBasic()
+				.disable()
+			.exceptionHandling()
+				.authenticationEntryPoint(new RestAuthenticationEntryPoint())
+				.and()
+			.authorizeRequests()
+				.antMatchers("/favicon.ico", "/social.html", "/social/**")
+					.permitAll()
+				.antMatchers("/auth/**", "/oauth2/**")
+					.permitAll()
+				.anyRequest()
+					.authenticated()
+				.and()
+			.oauth2Login()
+				.authorizationEndpoint()
+					.baseUri(OAUTH2LOGIN_BASEURI)
+					.authorizationRequestRepository(cookieAuthorizationRequestRepository())
+					.and()
+				.redirectionEndpoint()
+					.baseUri("/oauth2/callback/*")
+					.and()
+				.userInfoEndpoint()
+					.userService(customOAuth2UserService)
+					.and()
+				.successHandler(oAuth2AuthenticationSuccessHandler)
+				.failureHandler(oAuth2AuthenticationFailureHandler);
+		// @formatter:on
 
 		// Add our custom Token based authentication filter
 		http.addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 	}
+
 }
