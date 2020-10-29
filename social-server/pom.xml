@@ -15,7 +15,7 @@
 
 	<properties>
 		<spring-boot.version>2.3.4.RELEASE</spring-boot.version>
-		<spring-cloud-gcp.version>1.2.3.RELEASE</spring-cloud-gcp.version>
+		<spring-cloud-gcp.version>1.2.5.RELEASE</spring-cloud-gcp.version>
 		<jjwt.version>0.9.1</jjwt.version>
 		<appengine.version>1.9.82</appengine.version>
 
